@@ -3,7 +3,7 @@ Backend created in nodejs in combination with typescript.
 
 ## Requirements
 - node js 10.x
-- npm
+- npm 6.5.x
 
 ## Npm scripts
 - run watch: runs the app and recompiles on code changes (for dev)
