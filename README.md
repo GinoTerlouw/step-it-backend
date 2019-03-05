@@ -14,9 +14,16 @@ Backend created in nodejs in combination with typescript.
  
  - Create a new route
 
-First off all create a new controller under src controllers, name the file as 
-the function name and make sure to export it.
+First off create a new folder under routes.
+For example:
+>  dinges.route
 
+For every method on this route create a typescript file named by their method.
+So for get it would be:
+> get.dinges.ts
+
+
+In get.dinges.ts you create your controller like this:
 ```
 const getDinges = (req, res) => {
   return res.json({status: "ok! :D"})
@@ -25,18 +32,38 @@ const getDinges = (req, res) => {
 export default getDinges;
 ```
 
-To expose the route on the server add the following snippets in src/app.ts
+To expose the route on the server we need to add just 2 more things
+
+1. Create an index.ts file and import all of your route methods like this
 ```
-this.registerRoute({
-    slug: '/dinges',
-    method: 'get',
-    middleware: [],
-    controller: getDinges
+import Route from '../../router'
+
+import getDinges from './get.dinges'
+```
+
+after that we will create the Route object, here we will pass in the controller,
+middlewares, type of method and the slug and we'll export the routes
+
+```
+const getDingesRoute = new Route({
+  controller: getDinges,
+  middleware: [],
+  method: 'get',
+  slug: '/'
 })
+
+export {
+  getIndexRoute
+}
 ```
 
-Don't forget to import the controller like this ;)
-```
-import index from './controllers/getDinges'
+2. import and export the route in routes/index.ts so that the app registers the routes so
+they'll get exposed to the server
 
+```
+import {getDingesRoute} from './dinges.route'
+
+export default [
+  getDingesRoute
+]
 ```
