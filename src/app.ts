@@ -20,6 +20,10 @@ class App {
     // models.sequelize.sync({force: true})
   }
 
+  /**
+   *
+   * applies middleware that will run on every request
+   */
   private applyGlobalMiddleware(): void {
     this.app.use(bodyParser.urlencoded({ extended: false }))
     this.app.use(bodyParser.json())
