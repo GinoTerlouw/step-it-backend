@@ -4,7 +4,7 @@
  * @param {request} req
  * @param {response} res
  */
-const getIndex = (req, res) => {
+const getIndex = async (req, res) => {
   return res.json({status: "ok! :D"})
 }
 

@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as dotenv from 'dotenv'
 import routes from './routes'
 import Route from './router'
+import models from './models'
 
 class App {
   private app: express = express()
@@ -12,6 +13,9 @@ class App {
     this.port = process.env.PORT ? parseInt(process.env.PORT) : 3000
     this.registerRoutes(routes)
     this.startServer()
+
+    // run this to sync models with the database
+    // models.sequelize.sync({force: true})
   }
 
   /**
