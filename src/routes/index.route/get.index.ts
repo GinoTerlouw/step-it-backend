@@ -5,7 +5,7 @@
  * @param {response} res
  */
 const getIndex = async (req, res) => {
-  return res.json({status: "ok! :D"})
+  return res.json({status: 200, result: {user: req.user}})
 }
 
 export default getIndex
