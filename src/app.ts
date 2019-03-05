@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as dotenv from 'dotenv'
 import routes from './routes'
 import Route from './router'
+import * as bodyParser from 'body-parser'
 import models from './models'
 
 class App {
@@ -11,11 +12,21 @@ class App {
   constructor() {
     dotenv.config()
     this.port = process.env.PORT ? parseInt(process.env.PORT) : 3000
+    this.applyGlobalMiddleware()
     this.registerRoutes(routes)
     this.startServer()
 
     // run this to sync models with the database
     // models.sequelize.sync({force: true})
+  }
+
+  /**
+   *
+   * applies middleware that will run on every request
+   */
+  private applyGlobalMiddleware(): void {
+    this.app.use(bodyParser.urlencoded({ extended: false }))
+    this.app.use(bodyParser.json())
   }
 
   /**
