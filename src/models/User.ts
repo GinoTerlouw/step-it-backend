@@ -9,9 +9,13 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
       allowNull: false
     },
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
     password: {
       type: DataTypes.STRING(255),
-      allowNull: true
+      allowNull: false
     },
     createdAt: {
       type: DataTypes.DATE,
