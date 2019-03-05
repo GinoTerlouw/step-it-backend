@@ -1,13 +1,7 @@
 import * as express from 'express'
 import * as dotenv from 'dotenv'
-import index from './controllers/index'
-
-interface Route {
-  slug: string,
-  method: string,
-  middleware?: Array<Function>,
-  controller: Function
-}
+import routes from './routes'
+import Route from './router'
 
 class App {
   private app: express = express()
@@ -16,30 +10,20 @@ class App {
   constructor() {
     dotenv.config()
     this.port = process.env.PORT ? parseInt(process.env.PORT) : 3000
-    this.registerRoutes()
+    this.registerRoutes(routes)
     this.startServer()
   }
 
   /**
-   * exposes route on server
-   * @param {Route} opts
-   */
-  private registerRoute(opts: Route): void {
-    const {slug, method, middleware, controller} = opts
-
-    this.app[method](slug, middleware, controller)
-  }
-
-  /**
    *
-   * registers all routes
+   * exposes routes on the server
+   * @param {Array<Route>} routes
    */
-  private registerRoutes(): void {
-    this.registerRoute({
-      slug: '/',
-      method: 'get',
-      middleware: [],
-      controller: index
+  private registerRoutes(routes: Array<Route>): void {
+    routes.forEach((route: Route) => {
+      const {slug, method, middleware, controller} = route
+
+      this.app[method](slug, middleware, controller)
     })
   }
 
