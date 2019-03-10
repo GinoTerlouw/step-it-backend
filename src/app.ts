@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv'
 import routes from './routes'
 import Route from './router'
 import * as bodyParser from 'body-parser'
+import * as cors from 'cors'
 import models from './models'
 
 class App {
@@ -25,6 +26,7 @@ class App {
    * applies middleware that will run on every request
    */
   private applyGlobalMiddleware(): void {
+    this.app.use(cors())
     this.app.use(bodyParser.urlencoded({ extended: false }))
     this.app.use(bodyParser.json())
   }
