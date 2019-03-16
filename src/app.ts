@@ -9,13 +9,16 @@ import models from './models'
 class App {
   private app: express = express()
   private readonly port: number
+  private readonly router: express.Router = express.Router()
 
   constructor() {
     dotenv.config()
     this.port = process.env.PORT ? parseInt(process.env.PORT) : 3000
     this.applyGlobalMiddleware()
     this.registerRoutes(routes)
-    this.startServer()
+    this.checkIfDBConnectionIsAlive().catch((e) => {
+      console.log(e)
+    })
 
     // run this to sync models with the database
     // models.sequelize.sync({force: true})
@@ -27,8 +30,24 @@ class App {
    */
   private applyGlobalMiddleware(): void {
     this.app.use(cors())
-    this.app.use(bodyParser.urlencoded({ extended: false }))
+    this.app.use(bodyParser.urlencoded({extended: false}))
     this.app.use(bodyParser.json())
+  }
+
+  /**
+   *
+   * checks whether or not sequelize is connected to the database,
+   * if so it starts the server.
+   */
+  private async checkIfDBConnectionIsAlive(): Promise<void> {
+    try {
+      await models.sequelize.authenticate()
+
+      this.startServer()
+    } catch (e) {
+      console.log(e)
+      throw 'connection could not be established'
+    }
   }
 
   /**
@@ -40,8 +59,10 @@ class App {
     routes.forEach((route: Route) => {
       const {slug, method, middleware, controller} = route
 
-      this.app[method](slug, middleware, controller)
+      this.router[method](slug, middleware, controller)
     })
+
+    this.app.use(`/api/V${process.env.API_VER}`, this.router)
   }
 
   /**
