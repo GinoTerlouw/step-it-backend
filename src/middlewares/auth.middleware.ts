@@ -12,19 +12,23 @@ const authMiddleware = async (req, res, next) => {
   const {authorization} = req.headers
 
   if (!authorization) {
-    return res.status(400).json({status: 400, message: 'no authorization header provided'})
+    return res.status(400).json({status: 400, message: 'No authorization header provided'})
+  }
+
+  const token = authorization.split('JWT ')[1]
+
+  if (!token) {
+    return res.status(400).json({status: 400, message: 'Malformed jwt provided'})
   }
 
   try {
-    const {email} = await jwt.verify(authorization, process.env.JWT_SECRET)
+    const {email} = await jwt.verify(token, process.env.JWT_SECRET)
 
-    const {id, createdAt, updatedAt} = await findUserByEmail(email)
-
-    req.user = {id, email, createdAt, updatedAt}
+    req.user = await findUserByEmail(email)
 
     next()
   } catch (err) {
-    return res.status(400).json({status: 400, message: 'invalid jwt token'})
+    return res.status(400).json({status: 400, message: 'Invalid jwt token'})
   }
 }
 

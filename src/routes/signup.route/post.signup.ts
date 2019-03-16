@@ -1,4 +1,4 @@
-import {createUser, findUserByEmail} from '../../services/user.service'
+import {createUser} from '../../services/user.service'
 import * as jwt from 'jsonwebtoken'
 
 /**
@@ -22,7 +22,7 @@ const postSignup = async (req, res) => {
 
   const token = jwt.sign({id: user.id, email: user.email}, process.env.JWT_SECRET)
 
-  return res.status(200).json({status: 200, result: {token}})
+  return res.status(200).json({status: 200, result: {token: `JWT ${token}`}})
 }
 
 export {
